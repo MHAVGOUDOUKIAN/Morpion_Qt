@@ -1,9 +1,10 @@
 #include "Launcher.hpp"
 
-Launcher::Launcher(QWidget *parent) : QWidget(parent) {   
+Launcher::Launcher(QWidget *parent) : QMainWindow(parent) {   
     setFixedSize(270, 230);
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
     setWindowTitle("Launcher");
+    statusBar()->showMessage("Ready");
     show();
 
     QVBoxLayout* main_section = new QVBoxLayout();
@@ -25,10 +26,10 @@ Launcher::Launcher(QWidget *parent) : QWidget(parent) {
     // #========= Section settings =========#
     QFormLayout* section_settings = new QFormLayout();
 
-    host = new QLineEdit();
+    host = new QLineEdit("");
     host->setDisabled(true);
     port = new QLineEdit("6000");
-    name = new QLineEdit();
+    name = new QLineEdit("");
 
     host->setMaxLength(15);
     port->setMaxLength(5);
@@ -58,7 +59,9 @@ Launcher::Launcher(QWidget *parent) : QWidget(parent) {
     connect(rClient, SIGNAL(clicked()), this, SLOT(slotEnableHost()));
     connect(valid, SIGNAL(clicked()), this, SLOT(checkFormIsValid()));
 
-    setLayout(main_section);
+    QWidget* widget = new QWidget();
+    widget->setLayout(main_section);
+    setCentralWidget(widget);
 }
 
 void Launcher::slotEnableHost() { host->setDisabled(false); }
@@ -66,6 +69,7 @@ void Launcher::slotEnableHost() { host->setDisabled(false); }
 void Launcher::soltDisableHost() { host->setDisabled(true); }
 
 void Launcher::checkFormIsValid() { 
+
     // Checking host IP address is valid
     bool IP_convert_success=true;
     QString host_str = host->text();
@@ -82,19 +86,44 @@ void Launcher::checkFormIsValid() {
         } else { IP_convert_success = false; }
     }
 
-    // Checking port is valid
+    // Checking port syntax is valid
     QString port_str = port->text();
     bool port_conv_succ = true;
+    bool port_valid=true;
     port_str.toInt(&port_conv_succ, 10);
 
-    if(port_conv_succ && IP_convert_success) {
+    // Testing if the port is available
+    if(!host->isEnabled()) {
+        int server_sock;
+        sockaddr_in server;
+        server_sock = socket(AF_INET, SOCK_STREAM, 0);
+        if(server_sock==-1) { 
+            std::cout << "> [ERROR] can't init socket" << std::endl;
+        }
+        server.sin_addr.s_addr = INADDR_ANY;
+        server.sin_family = AF_INET;
+        server.sin_port = htons(atoi(port_str.toStdString().c_str()));
+        if (bind(server_sock, (struct sockaddr *) &server, sizeof(server)) == -1) { 
+            std::cout << "[ERROR] port already used " << std::endl;    
+            port_valid=false;
+        }
+        ::close(server_sock);
+    }
+
+    // Checking name
+    QString name_str = name->text();
+    bool name_valid=true;
+    if(name_str.toStdString().size()==0) name_valid=false;
+
+    // Conclusion of validation of the form
+    if(port_conv_succ && IP_convert_success && port_valid && name_valid) {
         std::ofstream file("./conf.cfg");
 
         if(file) {
             if(rHost->isChecked()) {
-                file << 0 << " " << port_str.toStdString() << " " << name->text().toStdString();
+                file << 0 << std::endl << port_str.toStdString() << std::endl << name_str.toStdString();
             } else {
-                file << 1 << " " << host_str.toStdString() << " " << port_str.toStdString() << " " << name->text().toStdString();
+                file << 1 << std::endl << host_str.toStdString() << std::endl << port_str.toStdString() << std::endl << name->text().toStdString();
             }   
         } else {
             std::cout << "> [ERROR] impossible d'ouvrir le fichier de configuration" << std::endl;
@@ -104,13 +133,26 @@ void Launcher::checkFormIsValid() {
         QApplication::instance()->quit();
     }
     else {
+        if(!name_valid) {
+            name->setText("");
+            name->setPlaceholderText("#INVALID#");
+            statusBar()->showMessage("");
+        }
+
         if(!port_conv_succ) {
             port->setText("");
             port->setPlaceholderText("#INVALID#");
+            statusBar()->showMessage("");
+        } else {
+            if(!port_valid) {
+                statusBar()->showMessage("[ERROR] Port already used");
+            }
         }
+        
         if(!IP_convert_success) {
             host->setText("");
             host->setPlaceholderText("#INVALID#");
+            statusBar()->showMessage("");
         }
     }
 }

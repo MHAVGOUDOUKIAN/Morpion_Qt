@@ -1,3 +1,7 @@
+#ifndef LAUNCHER_HPP
+#define LAUNCHER_HPP
+
+// Qt
 #include <QApplication>
 #include <QWidget>
 #include <QFormLayout>
@@ -13,13 +17,23 @@
 #include <QGroupBox>
 #include <QDesktopWidget>
 #include <QTextStream>
+#include <QMainWindow>
 #include <QIcon>
+#include <QStatusBar>
 
+// STANDARD
 #include <iostream>
 #include <exception>
 #include <fstream>
 
-class Launcher : public QWidget
+// NETWORK
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h> 
+
+class Launcher : public QMainWindow
 {
     Q_OBJECT
     
@@ -38,3 +52,5 @@ class Launcher : public QWidget
         QRadioButton* rHost;
         QRadioButton* rClient;
 };
+
+#endif

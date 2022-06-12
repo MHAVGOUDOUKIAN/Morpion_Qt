@@ -1,6 +1,16 @@
 #include "Game.hpp"
 
-Game::Game() {}
+Game::Game() {
+    std::ifstream file("./conf.cfg");
+    if(file) {
+        std::string str;
+        while(std::getline(file,str)) {
+        }
+    } else {
+        std::cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << std::endl;
+
+    }
+}
 
 Game::~Game() {}
 
