@@ -7,3 +7,5 @@ CMakeFiles
 main_autogen
 .vscode
 main
+
+!CMakeLists.txt

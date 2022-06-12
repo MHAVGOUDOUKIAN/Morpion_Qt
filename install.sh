@@ -12,7 +12,7 @@ printb() {
 printb "#==== Launching installation ====#" 2
 cd src
 cmake .
-cmake --build . 
+cmake --build .
 cmake --install .
 rm $TITLE
 cd ..
