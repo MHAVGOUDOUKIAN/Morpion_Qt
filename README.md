@@ -1,11 +1,14 @@
 # Morpion_Qt
 ## Setup
 
+Install the following libraries
+
 ```bash
     > sudo apt install qt5-default
     > sudo apt install cmake
     > sudo apt install g++
     > sudo apt install libsfml-dev
+````
 
 ## Installation
 
