@@ -36,14 +36,12 @@ void Engine::run()
 void Engine::notify(sf::Keyboard::Key key, bool pressed) {
     if(key == sf::Keyboard::Escape) {
         m_window.close();
-        std::cout << "Key 'Escape' pressed" << std::endl;
     }
 }
 
 void Engine::notify(sf::Event m_event) {
     if(m_event.type == sf::Event::Closed) {
-        m_window.close();   
-        std::cout << "You closed the window" << std::endl;
+        m_window.close();
     }
 }
 

@@ -9,18 +9,11 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 
-class Client {
-    public:
-        Client(std::string host_ip, std::string name, int port);
+#include "User.hpp"
 
+class Client : public User{
     public:
-        void signalHandler(int signum);
-
-    private:
-        int port;
-        std::string name;
-        std::string host_ip;
-        int socket;
+        Client(std::string host_ip, int port, std::string name);
 };
 
 #endif

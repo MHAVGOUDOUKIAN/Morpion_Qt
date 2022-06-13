@@ -1,10 +1,10 @@
 #include "Launcher.hpp"
 
-Launcher::Launcher(QWidget *parent) : QMainWindow(parent) {   
-    setFixedSize(270, 230);
-    move(QApplication::desktop()->screen()->rect().center() - rect().center());
+Launcher::Launcher(bool* runApp,QWidget *parent) : status(runApp), QMainWindow(parent) {   
+    
+    QScreen *screen = QGuiApplication::primaryScreen();
+    setGeometry(screen->size().width()/2 - 270/2, screen->size().height()/2 - 230/2,270, 230);
     setWindowTitle("Launcher");
-    statusBar()->showMessage("Ready");
     show();
 
     QVBoxLayout* main_section = new QVBoxLayout();
@@ -52,12 +52,13 @@ Launcher::Launcher(QWidget *parent) : QMainWindow(parent) {
     main_section->addWidget(group_role);
     main_section->addSpacing(5);
     main_section->addLayout(section_settings);
+    main_section->addSpacing(10);
     main_section->addLayout(section_valid);
 
     connect(quit, SIGNAL(clicked()), QApplication::instance(), SLOT(quit()));
     connect(rHost, SIGNAL(clicked()), this, SLOT(soltDisableHost()));
     connect(rClient, SIGNAL(clicked()), this, SLOT(slotEnableHost()));
-    connect(valid, SIGNAL(clicked()), this, SLOT(checkFormIsValid()));
+    connect(valid, SIGNAL(clicked()), this, SLOT(slotcheckFormIsValid()));
 
     QWidget* widget = new QWidget();
     widget->setLayout(main_section);
@@ -68,7 +69,7 @@ void Launcher::slotEnableHost() { host->setDisabled(false); }
 
 void Launcher::soltDisableHost() { host->setDisabled(true); }
 
-void Launcher::checkFormIsValid() { 
+void Launcher::slotcheckFormIsValid() { 
 
     // Checking host IP address is valid
     bool IP_convert_success=true;
@@ -117,11 +118,12 @@ void Launcher::checkFormIsValid() {
 
     // Conclusion of validation of the form
     if(port_conv_succ && IP_convert_success && port_valid && name_valid) {
+        *status = true;
         std::ofstream file("./conf.cfg");
 
         if(file) {
             if(rHost->isChecked()) {
-                file << 0 << std::endl << port_str.toStdString() << std::endl << name_str.toStdString();
+                file << 0 << std::endl << "" << std::endl << port_str.toStdString() << std::endl << name_str.toStdString();
             } else {
                 file << 1 << std::endl << host_str.toStdString() << std::endl << port_str.toStdString() << std::endl << name->text().toStdString();
             }   
@@ -135,24 +137,23 @@ void Launcher::checkFormIsValid() {
     else {
         if(!name_valid) {
             name->setText("");
-            name->setPlaceholderText("#INVALID#");
-            statusBar()->showMessage("");
+            name->setPlaceholderText("#EMPTY#");
         }
 
         if(!port_conv_succ) {
             port->setText("");
             port->setPlaceholderText("#INVALID#");
-            statusBar()->showMessage("");
         } else {
             if(!port_valid) {
-                statusBar()->showMessage("[ERROR] Port already used");
+                port->setText("");
+                port->setPlaceholderText("#ALREADY_USED#");
+                
             }
         }
         
         if(!IP_convert_success) {
             host->setText("");
             host->setPlaceholderText("#INVALID#");
-            statusBar()->showMessage("");
         }
     }
 }

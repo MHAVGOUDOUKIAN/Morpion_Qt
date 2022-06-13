@@ -20,6 +20,9 @@
 #include <QMainWindow>
 #include <QIcon>
 #include <QStatusBar>
+#include <QScreen>
+#include <QPoint>
+#include <QFlags>
 
 // STANDARD
 #include <iostream>
@@ -38,19 +41,21 @@ class Launcher : public QMainWindow
     Q_OBJECT
     
     public:
-    explicit Launcher(QWidget *parent = 0);
+    explicit Launcher(bool* runApp,QWidget *parent = 0);
     
     private slots:
         void slotEnableHost();
         void soltDisableHost();
-        void checkFormIsValid();
-    
+        void slotcheckFormIsValid();
+
     private:
         QLineEdit* host;
         QLineEdit* port;
         QLineEdit* name;
         QRadioButton* rHost;
         QRadioButton* rClient;
+
+        bool *status;
 };
 
 #endif

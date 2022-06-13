@@ -3,10 +3,12 @@
 #include "Engine/Engine.hpp"
 #include <unistd.h>
 
+bool runApp = false;
+
 int launchSetup(int argc, char* argv[]) {
         QApplication setup(argc, argv);
 
-        Launcher m;
+        Launcher m(&runApp);
 
         return setup.exec(); // Fonction bloquante tant que l'application Qt est active
 }
@@ -19,7 +21,7 @@ void launchApp() {
 int main(int argc, char *argv[]) {
 
     launchSetup(argc, argv);
-    launchApp();
+    if(runApp) launchApp();
 
     return 0;
 }

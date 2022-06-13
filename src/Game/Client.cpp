@@ -1,4 +1,5 @@
 #include "Client.hpp"
 
-Client::Client(std::string host_ip, std::string name, int port) : host_ip(host_ip), name(name), port(port) {
+Client::Client(std::string host_ip, int port, std::string name) : User(host_ip, port, name) {
+    std::cout << "Client" << std::endl;
 }

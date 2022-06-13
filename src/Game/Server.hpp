@@ -2,14 +2,11 @@
 #define SERVER_HPP
 
 #include <iostream>
+#include "User.hpp"
 
-class Server {
+class Server : public User{
     public:
-        Server(std::string name, int port);
-        
-    private:
-        int port;
-        std::string name;
+        Server(std::string host_ip, int port, std::string name);
 };
 
 #endif

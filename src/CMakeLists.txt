@@ -20,6 +20,10 @@ set( SOURCES
     Engine/EventHandler.cpp
     Engine/TimeManager.cpp
     Game/Game.cpp
+    Game/Client.cpp
+    Game/Server.cpp
+    Game/User.cpp
+    Game/Board.cpp
 )
 
 set( HEADERS
@@ -28,6 +32,10 @@ set( HEADERS
     Engine/EventHandler.hpp
     Engine/TimeManager.hpp
     Game/Game.hpp
+    Game/Client.hpp
+    Game/Server.hpp
+    Game/User.hpp
+    Game/Board.hpp
 )
 
 add_executable(${PROJECT_NAME}
