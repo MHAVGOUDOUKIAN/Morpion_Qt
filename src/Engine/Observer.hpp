@@ -13,7 +13,7 @@ class KeyBoardObserver {
 class MouseObserver {
     public:
         virtual ~MouseObserver() {}
-        virtual void notify(sf::Mouse::Button, bool clicked) =0;
+        virtual void notify(sf::Mouse::Button, sf::Vector2i&, bool clicked) =0;
         virtual void reset() {}
 };
 

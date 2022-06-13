@@ -22,11 +22,12 @@ class Game : public sf::Drawable, public MouseObserver{
         virtual ~Game();
         void update(sf::Time deltaTime);
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-        virtual void notify(sf::Mouse::Button, bool clicked);
+        virtual void notify(sf::Mouse::Button, sf::Vector2i&, bool clicked);
 
     private:
-        //User *player;
         Board m_board;
+        User *player;
+        
 
 };
 

@@ -7,12 +7,12 @@ class User {
     public:
         User(std::string h, int p, std::string n);
     
-        void connect();
+        void connection();
         void read();
         void write();
 
     protected:
-        std::string host_ip;
+        std::string ipToCo;
         int port;
         std::string name;
 };

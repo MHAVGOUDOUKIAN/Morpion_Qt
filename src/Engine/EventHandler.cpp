@@ -19,11 +19,17 @@ void EventHandler::processEvents(sf::RenderWindow& targetWindow)
                 break;
 
             case sf::Event::MouseButtonPressed:
-                for(MouseObserver* mo: m_VMO) mo->notify(m_event.mouseButton.button, true);
+                {
+                    sf::Vector2i pos= sf::Mouse::getPosition(targetWindow);
+                    for(MouseObserver* mo: m_VMO) mo->notify(m_event.mouseButton.button, pos,true);
+                }
                 break;
 
             case sf::Event::MouseButtonReleased:
-                for(MouseObserver* mo: m_VMO) mo->notify(m_event.mouseButton.button, false);
+                {
+                    sf::Vector2i pos= sf::Mouse::getPosition(targetWindow);
+                    for(MouseObserver* mo: m_VMO) mo->notify(m_event.mouseButton.button, pos, false);
+                }
                 break;
 
             case sf::Event::LostFocus:

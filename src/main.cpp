@@ -1,9 +1,15 @@
 #include <iostream>
 #include "qtLauncher/Launcher.hpp"
 #include "Engine/Engine.hpp"
-#include <unistd.h>
+#include <csignal>
+
 
 bool runApp = false;
+
+void signalHandler(int unused)
+{
+    // I define this function to prevent the server to terminate if a client disconnect
+}
 
 int launchSetup(int argc, char* argv[]) {
         QApplication setup(argc, argv);
@@ -19,7 +25,7 @@ void launchApp() {
 }
 
 int main(int argc, char *argv[]) {
-
+    signal(SIGPIPE, signalHandler); 
     launchSetup(argc, argv);
     if(runApp) launchApp();
 
