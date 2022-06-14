@@ -10,11 +10,11 @@ Launcher::Launcher(bool* runApp,QWidget *parent) : status(runApp), QMainWindow(p
     QVBoxLayout* main_section = new QVBoxLayout();
 
     // #========= Section ROLE =========#
-    QGroupBox* group_role = new QGroupBox(tr("What are you ?"));
+    QGroupBox* group_role = new QGroupBox(tr("Network settings"));
     QHBoxLayout* section_role = new QHBoxLayout();
     
     rHost = new QRadioButton("Host");
-    rClient = new QRadioButton("Client");
+    rClient = new QRadioButton("Join");
 
     rHost->setChecked(true);
 

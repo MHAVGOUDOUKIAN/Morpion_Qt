@@ -60,3 +60,29 @@ void Game::notify(sf::Mouse::Button mouse, sf::Vector2i& pos, bool clicked) {
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(m_board);
 }
+
+void Game::parseMessage(std::string msg) {
+    std::vector<std::string> l_cmd;
+    std::stringstream strStream(msg);
+    std::string str;
+    while(std::getline(strStream, str, ':')) { l_cmd.push_back(str); }
+    for(int i=0; i<l_cmd.size(); i++) std::cout << l_cmd[i] << std::endl;
+
+    // ces message decrivent l'action de l'autre joueur
+    if(l_cmd[0]=="OK"){
+        // Reponse neutre
+    }
+    else if(l_cmd[0]=="PLAY") { 
+        // L'autre joueur à joué
+    }
+    else if(l_cmd[0]=="BEGIN") {
+        player->mustPlay=false;
+        // l'autre joueur commence à jouer
+    }
+    else if(l_cmd[0]=="WIN") {
+
+    }
+    else if(l_cmd[0]=="RESET") {
+        // La partie recommence va recommencer
+    }
+}

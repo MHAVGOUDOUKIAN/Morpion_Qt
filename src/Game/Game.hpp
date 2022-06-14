@@ -6,6 +6,8 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <random>
+#include <sstream>
 
 #include "../Engine/EventHandler.hpp"
 
@@ -23,12 +25,11 @@ class Game : public sf::Drawable, public MouseObserver{
         void update(sf::Time deltaTime);
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         virtual void notify(sf::Mouse::Button, sf::Vector2i&, bool clicked);
+        void parseMessage(std::string msg);
 
     private:
         Board m_board;
-        User *player;
-        
-
+        User *player;        
 };
 
 #endif
