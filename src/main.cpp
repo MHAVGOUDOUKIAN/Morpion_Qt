@@ -3,7 +3,6 @@
 #include "Engine/Engine.hpp"
 #include <csignal>
 
-
 bool runApp = false;
 
 void signalHandler(int unused)

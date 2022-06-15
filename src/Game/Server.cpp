@@ -1,6 +1,7 @@
 #include "Server.hpp"
+#include "Game.hpp"
 
-Server::Server(std::string host_ip, int port, std::string name) : User(host_ip, port, name), clientConnected(false) {
+Server::Server(Game* obj, std::string host_ip, int port, std::string name) : User(obj, host_ip, port, name), clientConnected(false) {
     status = 0;
     std::cout << "Serveur" << std::endl;
     std::cout << "Connecting .." << std::endl;
@@ -42,19 +43,39 @@ void Server::connection() {
     }
 
     receive = new std::thread(&Server::read, this);
+    std::default_random_engine gen;
+    std::uniform_int_distribution<int> dist(0,9);
+    int roll = dist(gen);
+
+    if(roll >= 5) { 
+        send("BEGIN:0");
+        mustPlay=true;
+    } // Server begin
+    else {send("BEGIN:1"); 
+        mustPlay=false;
+    } // client begin
+    
 }
 
 void Server::read() {
-    int n;
-    char buffer[256];
-    bzero(buffer, 255);
-    n = ::read(socketClient, buffer, sizeof(buffer)); // -1 to avoid EOF
-    if(n<0) std::cout << "> [ERROR] Cannot receive messages" << std::endl;
-    msgReceived = buffer;
+    while(1) {
+        int n;
+        char buffer[256];
+        bzero(buffer, 255);
+        n = ::read(socketClient, buffer, sizeof(buffer)); 
+        if(n<0) std::cout << "> [ERROR] Cannot receive messages" << std::endl;
+        msgReceived = buffer;
+        std::cout << buffer << std::endl;
+        gameObject->parseMessage(buffer);
+    }   
 }
 
 void Server::send(std::string msg) {
-    int n;
-    n = write(socketClient, msg.c_str(), msg.length());
-    if(n<0) std::cout << "> [ERROR] Cannot send messages" << std::endl;
+    if(clientConnected) {
+        int n;
+        n = ::write(socketClient, msg.c_str(), msg.length());
+        if(n<0) std::cout << "> [ERROR] Cannot send messages" << std::endl;
+    }
 }
+
+Server::~Server() {}

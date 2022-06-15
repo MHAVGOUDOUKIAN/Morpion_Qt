@@ -26,7 +26,7 @@ Launcher::Launcher(bool* runApp,QWidget *parent) : status(runApp), QMainWindow(p
     // #========= Section settings =========#
     QFormLayout* section_settings = new QFormLayout();
 
-    host = new QLineEdit("");
+    host = new QLineEdit("127.0.0.1");
     host->setDisabled(true);
     port = new QLineEdit("6000");
     name = new QLineEdit("");

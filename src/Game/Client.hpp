@@ -3,13 +3,16 @@
 
 #include "User.hpp"
 
+class Game;
+
 class Client : public User{
     public:
-        Client(std::string host_ip, int port, std::string name);
+        Client(Game* obj, std::string host_ip, int port, std::string name);
+        virtual ~Client();
 
         void connection();
         void read();
-        void send(std::string);
+        virtual void send(std::string);
 
     private:
         int socket;

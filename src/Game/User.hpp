@@ -11,20 +11,23 @@
 #include <string.h>
 #include <thread>
 
+class Game;
+
 class User {
     public:
-        User(std::string h, int p, std::string n);
-        ~User();
+        User(Game* gmobj, std::string h, int p, std::string n);
+        virtual ~User();
 
         void connection();
         void read();
-        void send(std::string);
+        virtual void send(std::string)=0;
         int getStatus();
 
     public:
         bool mustPlay;
 
     protected:
+        Game* gameObject;
         int status; // 0 = serveur / 1 = client
         std::string ipToCo;
         

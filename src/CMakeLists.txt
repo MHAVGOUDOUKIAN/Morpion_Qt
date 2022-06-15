@@ -49,6 +49,7 @@ target_link_libraries(${PROJECT_NAME}
     sfml-window
     sfml-system
     sfml-audio
+    pthread
 )
 
 set(PERMISSIONS OWNER_READ 

@@ -16,15 +16,16 @@ Game::Game() : m_board(){
         file.close();
 
         if(!status) {
-            player = new Server(host_ip, port, name);
+            player = new Server(this, host_ip, port, name);
         } else {
-            player = new Client(host_ip, port, name);
+            player = new Client(this, host_ip, port, name);
         }
 
     } else {
         std::cout << "[ERREUR] Can't reach configuration file" << std::endl;
     }
     EventHandler::getEventHandler()->addMouseObserver(this);
+    std::cout  << "plpayer created" << std::endl;
 }
 
 Game::~Game() { if(player != nullptr) delete player; }
@@ -35,25 +36,21 @@ void Game::update(sf::Time deltaTime) {
 
 void Game::notify(sf::Mouse::Button mouse, sf::Vector2i& pos, bool clicked) {
     if(mouse == sf::Mouse::Button::Left) {
-        if(clicked) {
-            m_board.set(pos.x/(800/m_board.getLines()), pos.y/(600/m_board.getLines()), 1);
+        if(clicked && player->mustPlay) {
+            int x{pos.x/(800/m_board.getLines())};
+            int y{pos.y/(600/m_board.getLines())};
+            if(m_board.get(x,y)==0){
+                player->mustPlay=false;
+                std::string msg="PLAY:";
+                msg+=std::to_string(x)+":";
+                msg+=std::to_string(y)+":";
+                msg+=std::to_string(player->getStatus()+1);
+                player->send(msg);
+                m_board.set(x, y, player->getStatus()+1);
+            }
         }
     }
-
-    if(mouse == sf::Mouse::Button::Right) {
-        if(clicked) {
-            m_board.set(pos.x/(800/m_board.getLines()), pos.y/(600/m_board.getLines()), 2);
-        }
-    }
-
-    if(mouse == sf::Mouse::Button::Middle) {
-        if(clicked) {
-            m_board.set(pos.x/(800/m_board.getLines()), pos.y/(600/m_board.getLines()), 0);
-        }
-    }
-
-    m_board.checkWhoWin();
-
+    
     if(m_board.checkWhoWin() >0) { m_board.clear();}
 }
 
@@ -66,23 +63,15 @@ void Game::parseMessage(std::string msg) {
     std::stringstream strStream(msg);
     std::string str;
     while(std::getline(strStream, str, ':')) { l_cmd.push_back(str); }
-    for(int i=0; i<l_cmd.size(); i++) std::cout << l_cmd[i] << std::endl;
-
-    // ces message decrivent l'action de l'autre joueur
-    if(l_cmd[0]=="OK"){
-        // Reponse neutre
-    }
-    else if(l_cmd[0]=="PLAY") { 
-        // L'autre joueur à joué
-    }
-    else if(l_cmd[0]=="BEGIN") {
-        player->mustPlay=false;
-        // l'autre joueur commence à jouer
-    }
-    else if(l_cmd[0]=="WIN") {
-
-    }
-    else if(l_cmd[0]=="RESET") {
-        // La partie recommence va recommencer
+    if(l_cmd.size()>0) {
+        if(l_cmd[0]=="PLAY") {
+            player->mustPlay=true;
+            m_board.set(std::stoi(l_cmd[1]), std::stoi(l_cmd[2]), std::stoi(l_cmd[3]));
+            if(m_board.checkWhoWin() >0) { m_board.clear();}
+        }
+        else if(l_cmd[0]=="BEGIN") {
+            if(std::stoi(l_cmd[1])==0) { player->mustPlay=false;}
+            else { player->mustPlay=true;}
+        }
     }
 }
