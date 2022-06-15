@@ -1,7 +1,8 @@
 #include "Client.hpp"
+#include "Game.hpp"
 
-Client::Client(std::string host_ip, int port, std::string name) : User(host_ip, port, name) {
-    status = 0;
+Client::Client(Game* obj, std::string host_ip, int port, std::string name) : User(obj, host_ip, port, name) {
+    status = 1;
     std::cout << "Client" << std::endl;
     initConnect = new std::thread(&Client::connection, this);
 }
@@ -29,12 +30,16 @@ void Client::connection() {
 }
 
 void Client::read() {
-    int n;
-    char buffer[256];
-    bzero(buffer, 255);
-    n = ::read(socket, buffer, sizeof(buffer)); // -1 to avoid EOF
-    if(n<0) std::cout << "> [ERROR] Cannot receive messages" << std::endl;
-    msgReceived = buffer;
+    while(1)  {
+        int n;
+        char buffer[256];
+        bzero(buffer, 255);
+        n = ::read(socket, buffer, sizeof(buffer));
+        if(n<0) std::cout << "> [ERROR] Cannot receive messages" << std::endl;
+        msgReceived = buffer;
+        std::cout << buffer << std::endl;
+        gameObject->parseMessage(buffer);
+    }
 }
 
 void Client::send(std::string msg) {
@@ -42,3 +47,5 @@ void Client::send(std::string msg) {
     n = write(socket, msg.c_str(), msg.length());
     if(n<0) std::cout << "> [ERROR] Cannot send messages" << std::endl;
 }
+
+Client::~Client() {}
