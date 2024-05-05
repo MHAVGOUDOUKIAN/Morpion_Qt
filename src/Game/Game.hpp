@@ -16,6 +16,8 @@
 #include "Server.hpp"
 #include "Board.hpp"
 
+#include "MessageDisplayer.hpp"
+
 class Engine;
 
 class Game : public sf::Drawable, public MouseObserver{
@@ -28,8 +30,9 @@ class Game : public sf::Drawable, public MouseObserver{
         void parseMessage(std::string msg);
 
     private:
+        MessageDisplayer* m_msg;
         Board m_board;
-        User *player;        
+        User* player;        
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-Board::Board() : lines(3), rows(3), m_board(lines*rows, 0), m_vertex(sf::Quads, lines*rows*4), m_fond(sf::Quads, 4) {
+Board::Board(const int x, const int y) : lines(x), rows(y), m_board(lines*rows, 0), m_vertex(sf::Quads, lines*rows*4), m_fond(sf::Quads, 4) {
     m_texture.loadFromFile("./src/assets/signs.png");
 
     m_fond[0].position = sf::Vector2f(0,0);
@@ -53,12 +53,11 @@ int Board::checkWhoWin() {
     if(get(0,0) != 0 ) if(get(0,0) == get(1,1) && get(0,0) == get(2,2)) return get(0,0);
     if(get(0,2) != 0 ) if(get(0,2) == get(1,1) && get(0,2) == get(2,0)) return get(0,2);
 
-    //Colonnes
+    //Colonnes & Lignes
     if(get(0,0) != 0 ) if(get(0,0) == get(1,0) && get(0,0) == get(2,0)) return get(0,0);
     if(get(0,1) != 0 ) if(get(0,1) == get(1,1) && get(0,1) == get(2,1)) return get(0,1);
     if(get(0,2) != 0 ) if(get(0,2) == get(1,2) && get(0,2) == get(2,2)) return get(0,2);
 
-    //Colonnes
     if(get(0,0) != 0 ) if(get(0,0) == get(0,1) && get(0,0) == get(0,2)) return get(0,0);
     if(get(1,0) != 0 ) if(get(1,0) == get(1,1) && get(1,0) == get(1,2)) return get(1,0);
     if(get(2,0) != 0 ) if(get(2,0) == get(2,1) && get(2,0) == get(2,2)) return get(2,0);

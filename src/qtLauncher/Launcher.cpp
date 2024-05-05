@@ -9,6 +9,22 @@ Launcher::Launcher(bool* runApp,QWidget *parent) : status(runApp), QMainWindow(p
 
     QVBoxLayout* main_section = new QVBoxLayout();
 
+    // #========= Grid Option Section =========#
+    QGroupBox* group_grid = new QGroupBox(tr("Grid"));
+    QHBoxLayout* section_grid = new QHBoxLayout();
+    
+    r33 = new QRadioButton("3x3");
+    r44 = new QRadioButton("4x4");
+    r55 = new QRadioButton("5x5");
+
+    r33->setChecked(true);
+
+    section_grid->addWidget(r33);
+    section_grid->addWidget(r44);
+    section_grid->addWidget(r55);
+
+    group_grid->setLayout(section_grid);
+
     // #========= Section ROLE =========#
     QGroupBox* group_role = new QGroupBox(tr("Network settings"));
     QHBoxLayout* section_role = new QHBoxLayout();
@@ -49,6 +65,7 @@ Launcher::Launcher(bool* runApp,QWidget *parent) : status(runApp), QMainWindow(p
     section_valid->addWidget(quit);
 
     // #========= Creating menu =========#
+    main_section->addWidget(group_grid);
     main_section->addWidget(group_role);
     main_section->addSpacing(5);
     main_section->addLayout(section_settings);
@@ -123,10 +140,13 @@ void Launcher::slotcheckFormIsValid() {
 
         if(file) {
             if(rHost->isChecked()) {
-                file << 0 << std::endl << "" << std::endl << port_str.toStdString() << std::endl << name_str.toStdString();
+                file << 0 << std::endl << "" << std::endl << port_str.toStdString() << std::endl << name_str.toStdString() << std::endl;
             } else {
-                file << 1 << std::endl << host_str.toStdString() << std::endl << port_str.toStdString() << std::endl << name->text().toStdString();
+                file << 1 << std::endl << host_str.toStdString() << std::endl << port_str.toStdString() << std::endl << name->text().toStdString() << std::endl;
             }   
+            if(r33->isChecked()) file << 3;
+            if(r44->isChecked()) file << 4;
+            if(r55->isChecked()) file << 5;
         } else {
             std::cout << "> [ERROR] impossible d'ouvrir le fichier de configuration" << std::endl;
         }

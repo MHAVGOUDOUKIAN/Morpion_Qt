@@ -1,5 +1,6 @@
 #include "Client.hpp"
 #include "Game.hpp"
+#include <chrono>
 
 Client::Client(Game* obj, std::string host_ip, int port, std::string name) : User(obj, host_ip, port, name) {
     status = 1;
@@ -20,12 +21,12 @@ void Client::connection() {
     bcopy((char*) m_host->h_addr, (char*)&host_addr.sin_addr.s_addr, m_host->h_length);
     host_addr.sin_port = htons(port);
 
-    if(connect(socket, (struct sockaddr *) &host_addr, sizeof(host_addr)) < 0) { 
-        std::cout << "> [ERROR] Connection impossible" << std::endl;
-    } else {
-        std::cout << "> Connected to: " << ipToCo.c_str() << std::endl;
+    while(connect(socket, (struct sockaddr *) &host_addr, sizeof(host_addr)) < 0){
+        std::cout << "Restart connection in 1 seconds.." << std::endl;
+        sleep(1);
     }
 
+    std::cout << "> Connected to: " << ipToCo.c_str() << std::endl;
     receive = new std::thread(&Client::read, this);
 }
 

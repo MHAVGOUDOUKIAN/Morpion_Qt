@@ -55,6 +55,10 @@ class Launcher : public QMainWindow
         QRadioButton* rHost;
         QRadioButton* rClient;
 
+        QRadioButton* r33;
+        QRadioButton* r44;
+        QRadioButton* r55;
+
         bool *status;
 };
 

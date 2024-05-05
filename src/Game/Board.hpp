@@ -8,7 +8,7 @@
 
 class Board : public sf::Drawable{
     public:
-        Board();
+        Board(const int x, const int y);
         virtual ~Board();
         void set(int x, int y, short value=0);
         short get(int x, int y);

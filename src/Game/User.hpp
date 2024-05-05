@@ -23,10 +23,13 @@ class User {
         virtual void send(std::string)=0;
         int getStatus();
 
-    public:
-        bool mustPlay;
+        bool playerMustPlay(void) { return mustPlay; }  
+        void setplayerMustPlay(bool mustplay) {this->mustPlay=mustplay;}
+        int playerStatus(void) { return status; } 
+
 
     protected:
+        bool mustPlay;
         Game* gameObject;
         int status; // 0 = serveur / 1 = client
         std::string ipToCo;

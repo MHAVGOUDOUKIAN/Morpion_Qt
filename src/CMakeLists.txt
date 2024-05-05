@@ -24,6 +24,7 @@ set( SOURCES
     Game/Server.cpp
     Game/User.cpp
     Game/Board.cpp
+    Game/MessageDisplayer.cpp
 )
 
 set( HEADERS
@@ -36,6 +37,7 @@ set( HEADERS
     Game/Server.hpp
     Game/User.hpp
     Game/Board.hpp
+    Game/MessageDisplayer.hpp
 )
 
 add_executable(${PROJECT_NAME}
